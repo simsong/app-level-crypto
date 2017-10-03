@@ -1,0 +1,70 @@
+Specification & Assigned Task 
+
++ SLG	   Migrate bookmarks to a text file
+
+Setup: Create keys
+ + script keyutil.py creates the keys and writes them to config.ini
+ + keyutil.py --create makes config.ini with an RSA public key pair stored as a JWK
+ + keyutil.py --read reads the JWK and verifies encryption & decryption
+
+Configuration and State Information:
+config.ini file
+ + private key as a JSON object  (no need to store public key because RSA public key can be drrived from private key)
+ + location for the sqlite3 database
+
+Database Schema:
+ + dbutil.py - program to manage database utility
+table: responses
+rowid      int
+timestamp  datetime
+encryptedFirstname string
+firstname  string
+encryptedAge string
+age	   integer
+
+Server Side:
++ Have a web server that the client connects to.  http://cats6-12.it.census.gov/survey.cgi
++ survey.cgi:
++ Get public key out of config.ini
+  + Send the public key as a JWK to the browser in an HTML document containing the form
+  + Create a form that requests First Name and Age
+  + Create a function for onsubmit() that has an embedded JSON variable for the JWK.
+  + The function is described below
+
+Client Side
+- Receive the form
+- Let the user fill out the form
+- Wait for the SUBMIT button to be  
+- onsubmit function:
+  - import the key
+  - the form has two fields with the ids 'fistname' and 'age'
+  - getElementById('firstname') and encrypt to encryptedFirstname
+  - getElementById('age') and encrypt to encryptedAge
+  - do a $.get() to the server with a URL in the form:
+    http://cats6-12.it.census.gov/demo/submit.cgi&firstname=bin1&age=bin2
+    where bin1 and bin2 are base64-encoded values, encoded in the browser with btoa()
+  - when GET is successful, run a callback that:
+    - JavaScript alert -- "Thank you, your form is submit"
+    - Clear the form
+
+Server Side Again:
+- Receive the GET
+- Base64 decode with built-in module
+- Decrypt with the matching private key  (q: where do we store the key for the demo?)
+
+Server Report Page:
+- https://cats6-12.it.census.gov/demo/report.cgi
+- Display a table:
+  - headers for all of the columns
+  - dump the full contents of the table.
+  - refresh every second
+
+Demo Outline:
+- Screen #1 
+   - web page with the report http://cats6-12.it.census.gov/demo/report.cgi
+   - terminal that is "tail -f" on webserver log- 
+- Screen #2:
+   - http://cats6-12.it.census.gov/demo/survey.cgi
+- User will enter name & age into survey & click submit
+- Browser will say "Thank you" with an alert() and then clear the form.
+

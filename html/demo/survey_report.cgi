@@ -1,0 +1,1 @@
+../../cgi-bin/survey_report.cgi
