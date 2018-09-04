@@ -1,0 +1,23 @@
+
+MariaDB [survey]> select * from response_json;
++-------+---------------------+------------------------------------------------------------------+--------------------------------------------------+
+| rowid | created             | jsonEncrypted                                                    | json                                             |
++-------+---------------------+------------------------------------------------------------------+--------------------------------------------------+
+|    18 | 2017-05-09 15:41:50 | K4lCg6ZlNBi3Wj7jxGuCnPLBAtXVcCDb15yiPlc31bK0bIsXptQ/LC0kU1w4jdop | {"firstname":"NewYear","age":"1"} |
++-------+---------------------+------------------------------------------------------------------+--------------------------------------------------+
+1 row in set (0.00 sec)
+
+MariaDB [survey]> desc response;
++--------------------+-----------+------+-----+-------------------+-----------------------------+
+| Field              | Type      | Null | Key | Default           | Extra                       |
++--------------------+-----------+------+-----+-------------------+-----------------------------+
+| rowid              | int(11)   | NO   | PRI | NULL              | auto_increment              |
+| created            | timestamp | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
+| firstnameEncrypted | text      | YES  |     | NULL              |                             |
+| firstname          | text      | YES  |     | NULL              |                             |
+| ageEncrypted       | text      | YES  |     | NULL              |                             |
+| age                | int(11)   | YES  |     | NULL              |                             |
++--------------------+-----------+------+-----+-------------------+-----------------------------+
+6 rows in set (0.00 sec)
+
+MariaDB [survey]>
