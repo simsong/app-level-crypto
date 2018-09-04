@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+# coding=UTF-8
+#
+# File change detector
+
+HEAD="""
+   <title>Encrypted Survey Demonstration</title>
+   <script src="jquery-3.1.1.min.js"></script>
+"""
+
+REPORT="""
+   <div id='response'></div>
+   <div id='access'></div>
+"""
+
+CONFIG='/var/www/html/demo/config.ini'
+
+if __name__=="__main__":
+   import sqlite3
+   import cgi
+   import cgitb
+   import json
+   cgitb.enable()
+
+   print("Content-Type: text/html")
+   print()
+   print("<html>")
+   print("<head>")
+   print(HEAD)
+   print("</head>")
+   print("<body>")
+   print("<H1>Report</H1>")
+   print(REPORT)
+   print("</body>")
+   print("</html>")
+
