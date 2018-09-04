@@ -1,0 +1,400 @@
+\documentclass[fleqn,10pt]{wlscirep}
+%\documentclass{article}
+%\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xspace}
+\usepackage{url}
+\usepackage{fancyvrb}
+
+\newcommand{\JournalTitle}[1]{#1}
+
+\title{Application Level Cryptography for Securing Online Survey Responses}
+\author{Simson L. Garfinkel}
+%\author[1,*]{Simson L. Garfinkel}
+%\affil[1]{US Census Bureau, Suitland, MD}
+%\affil[*]{simson.l.garfinkel@census.gov}
+
+%\keywords{Keyword1, Keyword2, Keyword3}
+
+% Abstract goes here for Science abstract
+\begin{abstract}
+\end{abstract}
+
+
+\newcommand{\ETA}{$\textrm{E}^\textrm{3}\textrm{A}$\xspace}
+
+\begin{document}
+
+%\flushbottom
+\maketitle
+% Abstract goes here for non-Science abstract
+%\begin{abstract}
+%\end{abstract}
+%\thispagestyle{empty}
+
+\section{Introduction}
+
+The Census Bureau and other U.S. statistical agencies increasingly
+rely on Internet-based self-response instruments to collect
+data from individuals and establishments. Because Internet-connected
+computers have long been under attack by both cyber criminals and
+foreign governments\cite{dick-testimony}, these connections are now
+subject to monitoring by the U.S. Department of Homeland
+Security (DHS).
+
+Respondent data submitted to the Census Bureau website is protected
+using the Transport Layer Security (TLS)\cite{rfc8446} cryptographic
+protocol and cannot be deciphered by DHS as the DHS monitoring system
+is currently deployed.
+
+Because the DHS system might change in the future in response to
+new Internet-based threats, the Census Bureau has developed and demonstrated an
+approach that uses a second layer of encryption to protect respondent
+data. This system would prevent DHS employees from accessing
+respondent data even if DHS were to be provided with the Census
+Bureau's TLS encryption keys.
+
+\subsection{Background}
+
+The Census Bureau and other U.S. statistical agencies collect
+data from respondents under a pledge of confidentiality which states
+that data collected will used for statistical purposes
+only. In particular, Title 13 of the U.S. Code prohibits information
+that the Census Bureau collects for being used for law enforcement
+purposes.
+
+Statistical agencies are increasingly accepting data from respondents
+using Internet self-response instruments. In particular, the Census
+Bureau plans to make heavy use of Internet self-response for the 2020
+Census.\cite{pennington2016} 
+At the same time, computers operated by the US Government are under
+constant attack. A successful attack on Census Bureau computers would
+also represent a significant threat to data confidentiality. For this
+reason, the Census Bureau, like other U.S. Government civilian
+agencies, participates in the EINSTEIN network monitoring program
+operated by the U.S. Department of Homeland Security.\cite{thompson-feb2017}
+
+At the 13th Biennial Federal Committee on Statistical Methodology
+(FCSM) Policy Conference, a session explored ``The Challenges of
+Overlapping Mandates between Federal Statistical Agencies and
+Departmental Chief Information Officers.''\cite{fcsm-program} One of
+the panel speakers was Wayne R. Smith, the former Chief Statistician
+of Canada and Head of Statistics Canada, who resigned his position in
+September 2016 over concerns that the moved to shared information services
+meant that Statistics Canada would be unable to
+protect the confidentiality of respondent
+data\cite{ottawacitizen}. After Dr. Smith spoke, several attendees
+expressed concern that the U.S. Government's ``EINSTEIN'' program
+might pose a similar threat to confidentiality. 
+
+\subsection{EINSTEIN}
+
+The EINSTEIN program, operated by the U.S. Department of Homeland
+Security's (DHS), is designed to provide real-time collection,
+analysis, and sharing of computer security information across the
+federal civilian government to help mitigate this
+threat.\cite{dhs-einstein-2004}
+
+The original EINSTEIN program was developed in 2003 and monitored
+network flow records between federal civilian executive branch
+agencies and the public internet. The goal of this program was to
+record data to provide after-action forensic analysis and support. The
+EINSTEIN 2 program, first deployed in 2008, incorporated an intrusion
+detection system to detect hostile activity against federal agencies
+and provide notification to the victims. Four years later, DHS began
+transitioning to the EINSTEIN 3 Accelerated (\ETA) program, with the
+goal of both detecting and preventing cyber attacks against federal
+civilian government networks.\cite{dhs-einstein}
+
+In April 2013, the Department of Homeland Security published 
+\emph{Privacy Impact Assessment for EINSTEIN 3 --- Accelerated
+  ($E^3A$)}\cite{dhs-e3a-pia}. According to the PIA, ``\ETA combines
+existing CS\&C analysis of EINSTEIN 1 and EINSTEIN 2 data as well as
+information provided by cyber mission partners with existing
+commercial intrusion prevention security services to allow for the
+near real-time deep packet inspection of federal network traffic to
+identify and react to known or suspected cyber threats.''\cite[p.4]{dhs-e3a-pia}
+
+Designed to be operated by the DHS Office of Cybersecurity and
+Communications (CS\&C), EINSTEIN 3's deep packet inspection was
+presented as being critical for protecting cyber infrastructure. The
+PIA explained that while deep-packet inspection might occasionally
+result in the EINSTEIN sensors encountering personally identifiable
+information (PII), such information would be immediately deleted if
+it was captured:
+
+\begin{quote}
+  ``CS\&C requires the ability to perform deep packet inspection of known or
+suspected cyber threats that are identified by EINSTEIN sensors. CS\&C screens all data
+captured by EINSTEIN 1 and EINSTEIN 2 sensors to ensure it is analytically relevant to
+a known or suspected cyber threat. \ETA combines existing analysis of EINSTEIN 1 and
+EINSTEIN 2 data as well as information provided by cyber mission partners with
+existing commercial intrusion prevention security services to allow for the near real-time
+deep packet inspection of federal network traffic to identify and react to known or
+suspected cyber threats. Network flow records contain only packet header information.
+Packet inspection tools allow an analyst to look at the content of the threat data, which
+enables a more comprehensive analysis. Packet Capture may contain information that
+could be considered PII-like malicious data from or associated with email messages or
+attachments. CS\&C follows SOPs regarding handling of information that could be
+considered PII including the deletion of any PII unless there is a connection to a known
+or suspected cyber threat. Packet Capture shows details about the known or suspected
+cyber threat within the federal network. CS\&C analyzes this detailed information and
+issues warnings, including possible mitigation strategies to the threat.''\cite[p.9]{dhs-e3a-pia}
+\end{quote}
+
+However, the PIA stressed that it might be necessary, at times, to
+include PII captured by EINSTEIN in an analytical product that DHS
+would then distributed:
+
+\begin{quote}
+  ``In accordance with the SOPs and information handling guidelines, all information
+that could be considered PII is reviewed prior to inclusion in any analytical product or
+other form of dissemination, and replaced with a generic label when possible. In some
+cases, a product may include information that could be considered PII because that
+information is deemed analytically relevant and necessary to understand the cyber threat.
+In those instances, the SOPs and information handling guidelines provide for safeguards
+regarding the marking, dissemination, and handling of the
+information.''\cite[p.9]{dhs-e3a-pia}
+\end{quote}
+
+The PIA further stated that non-cybersecurity information collected by
+DHS might be disseminated for non-cybersecurity purposes:
+
+\begin{quote}
+  \textbf{``6.5 Privacy Impact Analysis: Related to Information Sharing}
+
+  \textbf{``Privacy Risk:} If non-cybersecurity information must be shared outside of DHS, it
+increases the risk of unauthorized disclosure.
+
+  \textbf{``Mitigation:} Information about known or suspected cyber threats collected,
+analyzed, or otherwise obtained by CS\&C may be disclosed for cybersecurity purposes
+and in furtherance of the DHS cybersecurity mission.
+
+Information collected by \ETA or otherwise obtained by CS\&C may be
+disseminated for non-cybersecurity purposes in limited situations when the collected
+information appears to indicate involvement in activities that may violate laws or
+otherwise when the sharing is done in the performance of a lawful government function.
+This may include dissemination for law enforcement/intelligence or administrative
+purposes unrelated to the protection of an information system from cybersecurity threats,
+mitigations against such threats, or response to a cyber incident. In such cases, the
+recipient will be a federal, state, or local law enforcement entity.''\cite[p.23]{dhs-e3a-pia}
+\end{quote}
+
+On May 6, 2016, DHS issued an update to the \ETA privacy impact
+assessment, stating that the system would be enhanced with a new
+feature called Web Content Filtering (WCF).
+
+\begin{quote}
+``WCF will provide protection for web traffic5
+by blocking
+access to certain websites that are known to be, or include, malicious content (malware). In
+addition, WCF will prevent malware from suspicious websites from running on federal civilian
+Executive Branch D/A systems and networks. Finally, WCF will also detect and/or block phishing
+attempts as well as the undesirable content that may be included in
+those attempts.''\cite[p.2]{dhs-e3a-pia2}.
+\end{quote}
+
+The PIA went on to state that WCF would be implemented with the
+ability to decrypt the Secure Socket Layer (SSL) protocol. (SSL is the
+previous name for the Transport Layer Security protocol that is used
+to protect World Wide Web traffic):
+
+\begin{quote}
+``WCF capabilities also include in-line Secure Socket Layer (SSL)
+decryption; malware detection; and advanced analytics. WCF SSL
+provides visibility into specific types of organizational traffic
+(including web content) that has been encrypted, for the purpose of
+protecting that traffic from malicious activity that would otherwise
+remain hidden by traversing encrypted channels. The capability
+decrypts web traffic of D/As participating in the \ETA WCF capability
+for the purpose of detecting and preventing malicious web content on
+the D/A network.  DHS is not interested in the behavior of
+individuals; decryption is focused on web communications, not
+communications between individuals. DHS does not use this capability
+to investigate the behavior or private content of individuals. Malware
+detection is an inherent part of operating WCF. WCF protects specific
+federal civilian Executive Branch D/A traffic by using
+Government-furnished cyber threat indicators to detect malicious
+activity. Advanced analytics in this context refers to behavior-based
+(heuristic) threat indicators to identify how a cyber threat or any of
+the anomalous characteristics of a cyber threat, a computer system, or
+the data behaves.''\cite[p.3]{dhs-e3a-pia2}.
+\end{quote}
+
+Consistent with these stated capability improvements in the EINSTEIN
+system, on December 14, 2016, the Census Bureau published a Notice in
+the Federal Register indicating the intent to revise the
+confidentiality pledge.\cite{federal-register-2016-12-14} According to
+the announcement, the new pledge would be:
+
+\begin{quote}
+  ``The U.S. Census Bureau is required by law to protect your
+  information. The Census Bureau is not permitted to publicly release
+  your responses in a way that could identify you. Per the Federal
+  Cybersecurity Enhancement Act of 2015, your data are protected from
+  cybersecurity risks through screening of the systems that transmit
+  your data.''\cite{federal-register-2016-12-14}
+\end{quote}
+
+\subsection{Web Content Filtering of Encrypted Content}
+
+Generally speaking, there are two ways that modern web browsers can
+communicate with web servers over the Internet: with or without the
+use of an encryption protocol called transport layer security
+(TLS). When a web page is accessed using a Uniform Resource Locator
+(URL) that begins with ``http://'' --- for example,
+\url{http://census.gov} --- the connection between the server and the
+browser is not encrypted. Alternatively, when the same web page is
+accessed using a URL that beings with ``https://''
+(e.g. \url{https://census.gov}), then the server and the browser
+exchange information over an encrypted channel.  By design, TLS
+provides for confidentiality and integrity of the connection: it
+assures that a third party cannot eavesdrop on the contents of the
+connection, and the data sent by the browser is received by the server
+without modification.
+
+TLS is based on public key cryptography. Each web server is configured
+with a private key and a public key, which is contained in a public
+key certificate. Information encrypted with the private key can only
+be decrypted with the public key. When the web browser connects to the
+web server, the server sends the browser its public key
+certificate. The browser then creates a randomly generated session
+key, encrypts the key with the public key and sends it to the
+server. The server uses its private key to decrypt the session key so
+that the TLS-encrypted communications can take place.
+
+Many commercial network appliances now offer features such as ``Deep
+Packet Inspection of SSL/TLS Encrypted
+Traffic''\cite{sonicwall}, ``TLS Decryption,''\cite{paloalto} ``SSL
+analysis,''\cite{globalsign}. These devices typically operate as a
+cryptographic proxy, essentially mounting a man-in-the-middle attack
+on the encrypted communications. This is precisely the kind of attack
+on confidentiality that TLS was designed to prevent; TLS protections
+are bypassed by issuing additional certificates to the TLS inspection
+device. A 2016 study by O'Neill et. al found that 1 in 250 TLS
+connections on the Internet were proxied. ``The majority of these proxies appear to be benevolent,
+however we identify over 1,000 cases where three malware
+products are using this technology nefariously,'' the authors concluded.\cite{DBLP:conf/imc/ONeillRSZ16}
+
+Given the widespread availability, use, and apparent acceptance of TLS
+decryption technology, we sought to develop a system that would
+protect respondent data even if the Census Bureau website was being
+monitored with technology that decrypted TLS-protected communications. 
+ 
+\subsection{The Web Cryptography API}
+
+The World Wide Web Consortium's Web Cryptography API\cite{wcapi}
+defines a set of cryptographic functions that can be used by
+applications running in modern web browsers. According to the
+standard, typical uses for this technology is to enable Multi-factor
+Authentication, to encrypt documents locally that are then stored
+encrypted on a remote website, to sign documents, and to implement
+secure messaging. According to the Can I Use website, the Web
+Cryptography API is well supported in all current web browsers except
+for Internet Explorer 11 (Figure~\ref{caniuse}).
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{art/caniuse}
+  \caption{Support for the Web Cryptography API as of September 2018,
+    according to \url{https://caniuse.com/\#feat=cryptography}.\label{caniuse}}
+\end{figure}
+
+The Web Cryptography standard requires that web application using Web
+Cryptography API be loaded into a web browser using the TLS protocol, in
+order to assure that an attacker does not modify the JavaScript
+application as it is being sent to the browser.
+
+\section{Securing Survey Responses with Application Level Cryptography}
+We developed an approach that uses the Web Cryptography API to
+separately encrypt survey responses sent from the web browser to the
+web server. This second layer of encryption operates inside the HTTPS
+encrypted tunnel. As a result, even if a TLS decryption appliance was
+used to decrypt the HTTPS stream, it would not have access to survey
+responses.
+
+\subsection{Overview}
+
+A typical Internet self-response survey consists of three parts:
+
+\begin{enumerate}
+  \item A web application server, which sends the HTML survey form to
+    the respondent, and receives the respondent data from the
+    respondent's web browser.
+  \item A Hyper Text Markup Language (HTML) and JavaScript application
+    that runs inside the respondent's web browser. This application
+    presents the survey to the respondent, receives the data from the user, performs
+    local data validation, and sends the data to the application
+    server.
+  \item A database, which stores the respondent's results. 
+\end{enumerate}
+
+Our prototype system modifies these components in the following ways:
+
+\begin{enumerate}
+\item The web application server is modified to create a second
+  public/private key pair that is used to encrypt respondent data. We
+  call this the application-level key pair. In our implementation, the
+  server generates a 1024-bit RSA key pair that is used to secure all
+  respondent data.
+\item Next, we modify the JavaScript application sent from web
+  application server to the browser in three ways. First, the
+  application-level public key is embedded into the JavaScript
+  application. Second, new JavaScript is added that creates a 256-bit
+  AES session encryption key to encrypt the respondent data when the user clicks the
+  ``SUBMIT'' button. This session encryption key is then encrypted
+  with the application-level public key. Finally, the encrypted
+  session key and the encrypted respondent data (the ``encrypted
+  package'') are sent to the
+  application server.
+\item We further modify the application server to store the encrypted
+  package in the database.
+\item Finally, we create a new program for extracting the encrypted
+  data from the database and decrypting it. Decryption is performed
+  using the application-level private key to decrypt the 256-bit AES
+  session key, which is then used to decrypt the respondent data.
+\end{enumerate}
+
+
+\subsection{Demo}
+
+We create a simple web form for a hypothetical survey that requested a
+first name and an age (Figure~\ref{survey}). When submitted, these two
+values were packed into a JavaScript Object Notation (JSON) data
+structure (Figure~\ref{json}), compressed, and encrypted with the session key. The
+resulting data (Figure~\ref{encrypted}) was then sent to the web server.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.5\linewidth]{art/figure1}
+  \caption{A hypothetical web survey instrument with sample
+    data.}\label{survey}
+  \end{figure}
+
+\begin{figure}
+  \begin{Verbatim}
+    {"firstname":"Methuselah","age":"969"}
+  \end{Verbatim}
+  \caption{A JavaScript Object Notation (JSON) representation of the web response for Figure~\ref{survey}.}\label{json}
+\end{figure}
+
+\begin{figure}
+  \begin{Verbatim}
+    K4lCg6ZlNBi3Wj7jxGuCnPLBAtXVcCDb15yiPlc31bK0bIsXptQ/LC0kU1w4jdop
+  \end{Verbatim}
+  \caption{An encrypted value.}\label{encrypted}
+\end{figure}
+
+
+\section{Discussion}
+
+%\bibliographystyle{plainurl}
+\bibliography{app-level-crypto}
+
+\section{Acknowledgments}
+
+\section{Additional information}
+
+\end{document}
+
+% LocalWords:  cyber cryptographic cybersecurity mitigations

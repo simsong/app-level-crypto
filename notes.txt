@@ -1,0 +1,22 @@
+http://stackoverflow.com/questions/9833527/client-side-encryption-over-http-with-diffie-hellman-key-exchange-and-aes
+https://github.com/crypto-browserify/diffie-hellman
+http://www.soa-world.de/echelon/2010/09/diffie-hellman-key-exchange-in-javascript.html
+http://leemon.com/crypto/BigInt.html
+https://tweetnacl.js.org/#/
+http://security.stackexchange.com/questions/38453/javascript-diffie-hellman-and-aes-protocols
+http://www.soa-world.de/echelon/2010/09/diffie-hellman-key-exchange-in-javascript.html
+
+
+https://www.hanewin.net/encrypt/aes/aes.htm
+https://github.com/ricmoo/aes-js
+http://www.movable-type.co.uk/scripts/aes.html
+http://stackoverflow.com/questions/793812/javascript-aes-encryption
+http://security.stackexchange.com/questions/51703/how-to-best-use-javascript-to-encrypt-client-side-so-the-server-never-sees-it
+
+Why you shouldn’t do JavaScript crypto:
+https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2011/august/javascript-cryptography-considered-harmful/
+
+https://crypto.stanford.edu/sjcl/
+https://github.com/bitwiseshiftleft/sjcl
+http://bitwiseshiftleft.github.io/sjcl/
+
