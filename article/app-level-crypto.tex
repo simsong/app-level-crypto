@@ -234,7 +234,7 @@ the announcement, the new pledge would be:
   your responses in a way that could identify you. Per the Federal
   Cybersecurity Enhancement Act of 2015, your data are protected from
   cybersecurity risks through screening of the systems that transmit
-  your data.''\cite{federal-register-2016-12-14}
+  your data.''\cite{federal-register-2016-12-14}\cite{pledge}
 \end{quote}
 
 \subsection{Web Content Filtering of Encrypted Content}
@@ -282,7 +282,7 @@ decryption technology, we sought to develop a system that would
 protect respondent data even if the Census Bureau website was being
 monitored with technology that decrypted TLS-protected communications. 
  
-\subsection{The Web Cryptography API}
+\subsection{Securing Respondent Data With the Web Cryptography API}
 
 The World Wide Web Consortium's Web Cryptography API\cite{wcapi}
 defines a set of cryptographic functions that can be used by
@@ -305,13 +305,49 @@ Cryptography API be loaded into a web browser using the TLS protocol, in
 order to assure that an attacker does not modify the JavaScript
 application as it is being sent to the browser.
 
-\section{Securing Survey Responses with Application Level Cryptography}
-We developed an approach that uses the Web Cryptography API to
-separately encrypt survey responses sent from the web browser to the
-web server. This second layer of encryption operates inside the HTTPS
-encrypted tunnel. As a result, even if a TLS decryption appliance was
-used to decrypt the HTTPS stream, it would not have access to survey
-responses.
+The Census Bureau has developed an approach that uses the Web
+Cryptography API to separately encrypt survey responses sent from the
+web browser to the web server. This second layer of encryption
+operates inside the HTTPS encrypted tunnel at the application data
+level. It received a second encryption public key and used this second
+key to encrypt respondent data, then sent the respondent data to the
+web server for decryption. As a result, even if a TLS decryption
+appliance was used to decrypt the HTTPS stream, it would not have
+access to survey responses.
+
+\subsection{DHS Reactions}
+
+On October 13, 2017, a representative from the Census Bureau met with representatives from the
+Department of Homeland Security's National Cybersecurity Protection
+System (NCPS) to determine if the application-level encryption system
+could be deployed without violating any DHS policy and intentions. At
+the meeting, DHS described the operation of the EINSTEIN system and
+Census described the application-level encryption approach. DHS stated
+that deploying the application-level cryptography system would not violate any
+DHS policy. Indeed, DHS stated that it appeared that the system would
+provide additional security for Census collected data, by allowing the
+data to reside in encrypted form on the Bureau's web server before it
+transited to a more secure system.
+
+At the meeting, DHS also stated that in its current deployment, the \ETA Web Content Filtering
+was not designed to filter data sent from external web browsers to
+Government-operated web servers. Instead, \ETA was solely designed to
+monitor data sent between external websites and web browsers operated
+within the government networks. For example, \ETA could intercept data
+encrypted by malware running inside a user's web browser and
+communicating with external web servers.
+
+Following the meeting the October meeting, Census arranged for DHS
+NCPS to brief the Federal Committee on Statistical Methodology's
+Confidentiality and Data Access subcommittee (on January 23, 2018), as
+well as the FCSM executive committee, to explain that \ETA would not
+be able to intercept respondent data.
+
+
+
+\section{The Application Level Protection Mechanism}
+
+This section describes the application level cryptography mechanism.
 
 \subsection{Overview}
 
@@ -386,7 +422,9 @@ resulting data (Figure~\ref{encrypted}) was then sent to the web server.
 \end{figure}
 
 
-\section{Discussion}
+\subsection{Implementation}
+
+
 
 %\bibliographystyle{plainurl}
 \bibliography{app-level-crypto}
@@ -397,4 +435,5 @@ resulting data (Figure~\ref{encrypted}) was then sent to the web server.
 
 \end{document}
 
-% LocalWords:  cyber cryptographic cybersecurity mitigations
+% LocalWords:  cyber cryptographic cybersecurity mitigations NCPS
+%%  LocalWords:  FCSM
