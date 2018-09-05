@@ -338,6 +338,16 @@ resulting data (Figure~\ref{encrypted}) was then sent to the web server.
 
 
 \subsection{Implementation}
+In our development, we created two distinct versions.
+
+The first prototype version encrypted each field of the survey form
+using the plain RSA encryption using the PKCS1 v1.5
+algorithm. This version of RSA encryption uses the OAEP-based
+encryption scheme to protect against chosen plaintext and replay
+attacks, but it is not very efficient. Our second implementation used
+the generation of an AES-256 session key to encrypt the JSON data
+structure, as described earlier in this document.
+
 
 
 
