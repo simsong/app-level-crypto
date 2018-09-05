@@ -11,7 +11,7 @@
 \newcommand{\JournalTitle}[1]{#1}
 
 \title{Application Level Cryptography for Securing Online Survey Responses}
-\author{Simson L. Garfinkel}
+\author{Simson L. Garfinkel and William Yates}
 %\author[1,*]{Simson L. Garfinkel}
 %\affil[1]{US Census Bureau, Suitland, MD}
 %\affil[*]{simson.l.garfinkel@census.gov}
@@ -20,6 +20,19 @@
 
 % Abstract goes here for Science abstract
 \begin{abstract}
+The second Privacy Impact Analysis of the EINSTEIN 3A system developed
+by the U.S. Department of Homeland indicated that the system would
+have the ability to decrypt the TLS protocol used by the U.S. Census
+Bureau to provide confidentiality for responses submitted using
+internet self-response tools. To address this potential threat to
+confidentiality, the Census Bureau designed an approach using the
+World Wide Web Consortium's Web Cryptography API to provide a second
+layer of cryptographic protection for respondent data. Two working
+prototypes were developed. After further contact with DHS, the
+Census Bureau learned that the EINSTEIN 3A's provisions for Web
+Content Filtering were designed to decrypt output TLS connections, and
+not inbound connections. As a result, the Census Bureau discontinued
+development of the prototype. 
 \end{abstract}
 
 
@@ -258,8 +271,6 @@ Confidentiality and Data Access subcommittee (on January 23, 2018), as
 well as the FCSM executive committee, to explain that \ETA would not
 be able to intercept respondent data.
 
-
-
 \section{The Application Level Protection Mechanism}
 
 This section describes the application level cryptography mechanism.
@@ -370,8 +381,9 @@ The prototype is organized in two directories in the git repository:
     to the JavaScript running.
 \end{description}
 
-\subsubsection{/src/html/demo}
-This section describes the contents of the /src/html/dmeo directory.
+\subsubsection{src/html/demo}
+This section describes the contents of the src/html/dmeo directory in
+the git repository.
 
 \begin{description}
   \item[config.ini] This configuration file specifies the location of
@@ -399,15 +411,66 @@ This section describes the contents of the /src/html/dmeo directory.
   \item[setup\_rel7.sh] A bash script that installs the necessary
     packages on a Red Hat Enterprise License (RHEL) System 7 Linux
     operating system to run the prototype.
+  \item[survey\_json\_report.js] JavaScript for displaying the
+      report of successfully encrypted and decrypted survey responses
+      for the second prototype.
+  \item[survey\_report.js] JavaScript for displaying the
+      report of successfully encrypted and decrypted survey responses
+      for the first prototype.
 \end{description}
 
+\subsection{/src/cgi-bin}
+This section describes the contents of the src/cgi-bin directory in
+the git repository. This directory contains the Common Gateway
+Interface files that are used by the prototype; the files are stored
+in a different directory because the RHEL7 secure configuration that
+we used required that CGI scripts be stored in a different directory
+than the HTML and JavaScript files.
+
+\begin{description}
+
+  \item[report.cgi] A CGI script that displays the secure form and
+    shows the public key used to encrypt it.
+    \item[submit.cgi] A CGI script that accepts the RSA-encrypted
+      form, decrypts the parameters, and stores both the encrypted and
+      decrypted values in the database. Note that this script was
+      developed for demonstration purposes: in a production system,
+      \emph{either} the encrypted or decrypted values would be stored
+      in the database, depending on the deployment configuration.
+      \item[submit\_json.cgi] A CGI submission script, used by the
+        second prototype.
+      \item[survey.cgi] A CGI script that displays the survey for the
+        first prototype.
+      \item[survey\_json.cgi] A CGI script that displays the survey
+        for the second prototype.
+      \item[survey\_json\_report.cgi] A CGI script that displays a
+        report of the submitted values for the second prototype. 
+      \item[survey\_report.cgi] A  CGI script that displays a
+        report of the submitted values for the first prototype.
+\end{description}        
 
 
 %\bibliographystyle{plainurl}
 \bibliography{app-level-crypto}
 
-\section{Acknowledgments}
+\section{Conclusion}
+We developed a system using the World Wide Web Consortium's Web
+Cryptography API that would provide a second layer of cryptographic
+protection for survey responses. This second layer was designed to
+operate even if some kind of TLS decryption of Web Content Filtering
+system was employed between the survey respondent and the internet
+self-response instrument.
 
+Although the DHS EINSTEIN 3A system will not be deployed in a way that
+will decrypt survey responses, academic research has shown that a
+significant portion of internet traffic is now being decrypted using
+similar means. Therefore, although it is no longer urgently necessary
+to deploy the application level cryptography system described herein,
+this or similar technology might be useful in the future to provide an
+additional layer of security for survey responses. 
+
+\section{Disclaimer}
+This paper is presented with the hope that its content may be of interest to the general statistical community. The views in these papers are those of the authors, and do not necessarily represent those of the Census Bureau.
 \section{Additional information}
 
 \subsection{Excerpt from Privacy Impact Assessment for EINSTEIN 3---Accelerated (April 2013)}
@@ -500,5 +563,5 @@ the data behaves.''\cite[pp 2--3]{dhs-e3a-pia2}.
 
 \end{document}
 
-% LocalWords:  cyber cryptographic cybersecurity mitigations NCPS
-%%  LocalWords:  FCSM
+% LocalWords:  cyber cryptographic cybersecurity mitigations NCPS TLS
+%%  LocalWords:  FCSM decrypt decrypted cgi

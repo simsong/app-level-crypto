@@ -57,7 +57,10 @@ def read_keydict(configFile):
     """Read the key dictionary from a configuration file"""
     config = ConfigParser()
     config.read(configFile)
-    return json.loads(config['keys']['priv'])
+    try:
+        return json.loads(config['keys']['priv'])
+    except KeyError as e:
+        raise RuntimeError("[key][priv] not found in configuration file {}".format(configFile))
 
 def dict_to_priv(d):
     """Convert a dictionary to an rsa.PrivateKey"""
