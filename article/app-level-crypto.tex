@@ -6,7 +6,8 @@
 \usepackage{xspace}
 \usepackage{url}
 \usepackage{fancyvrb}
-
+\usepackage{nameref}
+\usepackage{hyperref}
 \newcommand{\JournalTitle}[1]{#1}
 
 \title{Application Level Cryptography for Securing Online Survey Responses}
@@ -121,106 +122,20 @@ Communications (CS\&C), EINSTEIN 3's deep packet inspection was
 presented as being critical for protecting cyber infrastructure. The
 PIA explained that while deep-packet inspection might occasionally
 result in the EINSTEIN sensors encountering personally identifiable
-information (PII), such information would be immediately deleted if
-it was captured:
-
-\begin{quote}
-  ``CS\&C requires the ability to perform deep packet inspection of known or
-suspected cyber threats that are identified by EINSTEIN sensors. CS\&C screens all data
-captured by EINSTEIN 1 and EINSTEIN 2 sensors to ensure it is analytically relevant to
-a known or suspected cyber threat. \ETA combines existing analysis of EINSTEIN 1 and
-EINSTEIN 2 data as well as information provided by cyber mission partners with
-existing commercial intrusion prevention security services to allow for the near real-time
-deep packet inspection of federal network traffic to identify and react to known or
-suspected cyber threats. Network flow records contain only packet header information.
-Packet inspection tools allow an analyst to look at the content of the threat data, which
-enables a more comprehensive analysis. Packet Capture may contain information that
-could be considered PII-like malicious data from or associated with email messages or
-attachments. CS\&C follows SOPs regarding handling of information that could be
-considered PII including the deletion of any PII unless there is a connection to a known
-or suspected cyber threat. Packet Capture shows details about the known or suspected
-cyber threat within the federal network. CS\&C analyzes this detailed information and
-issues warnings, including possible mitigation strategies to the threat.''\cite[p.9]{dhs-e3a-pia}
-\end{quote}
-
-However, the PIA stressed that it might be necessary, at times, to
-include PII captured by EINSTEIN in an analytical product that DHS
-would then distributed:
-
-\begin{quote}
-  ``In accordance with the SOPs and information handling guidelines, all information
-that could be considered PII is reviewed prior to inclusion in any analytical product or
-other form of dissemination, and replaced with a generic label when possible. In some
-cases, a product may include information that could be considered PII because that
-information is deemed analytically relevant and necessary to understand the cyber threat.
-In those instances, the SOPs and information handling guidelines provide for safeguards
-regarding the marking, dissemination, and handling of the
-information.''\cite[p.9]{dhs-e3a-pia}
-\end{quote}
-
-The PIA further stated that non-cybersecurity information collected by
-DHS might be disseminated for non-cybersecurity purposes:
-
-\begin{quote}
-  \textbf{``6.5 Privacy Impact Analysis: Related to Information Sharing}
-
-  \textbf{``Privacy Risk:} If non-cybersecurity information must be shared outside of DHS, it
-increases the risk of unauthorized disclosure.
-
-  \textbf{``Mitigation:} Information about known or suspected cyber threats collected,
-analyzed, or otherwise obtained by CS\&C may be disclosed for cybersecurity purposes
-and in furtherance of the DHS cybersecurity mission.
-
-Information collected by \ETA or otherwise obtained by CS\&C may be
-disseminated for non-cybersecurity purposes in limited situations when the collected
-information appears to indicate involvement in activities that may violate laws or
-otherwise when the sharing is done in the performance of a lawful government function.
-This may include dissemination for law enforcement/intelligence or administrative
-purposes unrelated to the protection of an information system from cybersecurity threats,
-mitigations against such threats, or response to a cyber incident. In such cases, the
-recipient will be a federal, state, or local law enforcement entity.''\cite[p.23]{dhs-e3a-pia}
-\end{quote}
+information (PII), such information would be immediately deleted if it
+was captured (See \nameref{excerpt1}). The PIA also stressed that it
+might be necessary, at times, to include PII captured by EINSTEIN in
+an analytical product that DHS would then distributed. The PIA further
+stated that non-cybersecurity information collected by DHS might be
+disseminated for non-cybersecurity purposes (see \nameref{excerpt3}).
 
 On May 6, 2016, DHS issued an update to the \ETA privacy impact
 assessment, stating that the system would be enhanced with a new
-feature called Web Content Filtering (WCF).
-
-\begin{quote}
-``WCF will provide protection for web traffic5
-by blocking
-access to certain websites that are known to be, or include, malicious content (malware). In
-addition, WCF will prevent malware from suspicious websites from running on federal civilian
-Executive Branch D/A systems and networks. Finally, WCF will also detect and/or block phishing
-attempts as well as the undesirable content that may be included in
-those attempts.''\cite[p.2]{dhs-e3a-pia2}.
-\end{quote}
-
-The PIA went on to state that WCF would be implemented with the
-ability to decrypt the Secure Socket Layer (SSL) protocol. (SSL is the
+feature called Web Content Filtering (WCF) that would provide \ETA
+with the ability to decrypt the Secure Socket Layer (SSL) protocol
+(see \nameref{excerpt4}). (SSL is the
 previous name for the Transport Layer Security protocol that is used
-to protect World Wide Web traffic):
-
-\begin{quote}
-``WCF capabilities also include in-line Secure Socket Layer (SSL)
-decryption; malware detection; and advanced analytics. WCF SSL
-provides visibility into specific types of organizational traffic
-(including web content) that has been encrypted, for the purpose of
-protecting that traffic from malicious activity that would otherwise
-remain hidden by traversing encrypted channels. The capability
-decrypts web traffic of D/As participating in the \ETA WCF capability
-for the purpose of detecting and preventing malicious web content on
-the D/A network.  DHS is not interested in the behavior of
-individuals; decryption is focused on web communications, not
-communications between individuals. DHS does not use this capability
-to investigate the behavior or private content of individuals. Malware
-detection is an inherent part of operating WCF. WCF protects specific
-federal civilian Executive Branch D/A traffic by using
-Government-furnished cyber threat indicators to detect malicious
-activity. Advanced analytics in this context refers to behavior-based
-(heuristic) threat indicators to identify how a cyber threat or any of
-the anomalous characteristics of a cyber threat, a computer system, or
-the data behaves.''\cite[p.3]{dhs-e3a-pia2}.
-\end{quote}
+to protect World Wide Web traffic)
 
 Consistent with these stated capability improvements in the EINSTEIN
 system, on December 14, 2016, the Census Bureau published a Notice in
@@ -234,7 +149,7 @@ the announcement, the new pledge would be:
   your responses in a way that could identify you. Per the Federal
   Cybersecurity Enhancement Act of 2015, your data are protected from
   cybersecurity risks through screening of the systems that transmit
-  your data.''\cite{federal-register-2016-12-14}\cite{pledge}
+  your data.''\cite{federal-register-2016-12-14,pledge}
 \end{quote}
 
 \subsection{Web Content Filtering of Encrypted Content}
@@ -432,6 +347,94 @@ resulting data (Figure~\ref{encrypted}) was then sent to the web server.
 \section{Acknowledgments}
 
 \section{Additional information}
+
+\subsection{Excerpt from Privacy Impact Assessment for EINSTEIN 3---Accelerated (April 2013)}
+
+\subsubsection{Relationship Between Participants --- Privacy Considerations}\label{excerpt1}
+\begin{quote}
+  ``CS\&C requires the ability to perform deep packet inspection of known or
+suspected cyber threats that are identified by EINSTEIN sensors. CS\&C screens all data
+captured by EINSTEIN 1 and EINSTEIN 2 sensors to ensure it is analytically relevant to
+a known or suspected cyber threat. \ETA combines existing analysis of EINSTEIN 1 and
+EINSTEIN 2 data as well as information provided by cyber mission partners with
+existing commercial intrusion prevention security services to allow for the near real-time
+deep packet inspection of federal network traffic to identify and react to known or
+suspected cyber threats. Network flow records contain only packet header information.
+Packet inspection tools allow an analyst to look at the content of the threat data, which
+enables a more comprehensive analysis. Packet Capture may contain information that
+could be considered PII-like malicious data from or associated with email messages or
+attachments. CS\&C follows SOPs regarding handling of information that could be
+considered PII including the deletion of any PII unless there is a connection to a known
+or suspected cyber threat. Packet Capture shows details about the known or suspected
+cyber threat within the federal network. CS\&C analyzes this detailed information and
+issues warnings, including possible mitigation strategies to the threat.
+
+  ``In accordance with the SOPs and information handling guidelines, all information
+that could be considered PII is reviewed prior to inclusion in any analytical product or
+other form of dissemination, and replaced with a generic label when possible. In some
+cases, a product may include information that could be considered PII because that
+information is deemed analytically relevant and necessary to understand the cyber threat.
+In those instances, the SOPs and information handling guidelines provide for safeguards
+regarding the marking, dissemination, and handling of the
+information.''\cite[p.9]{dhs-e3a-pia}
+\end{quote}
+
+\subsection{Privacy Impact Analysis: Related to Information Sharing}\label{excerpt3}
+\begin{quote}
+  \textbf{``Privacy Risk:} If non-cybersecurity information must be shared outside of DHS, it
+increases the risk of unauthorized disclosure.
+
+  \textbf{``Mitigation:} Information about known or suspected cyber threats collected,
+analyzed, or otherwise obtained by CS\&C may be disclosed for cybersecurity purposes
+and in furtherance of the DHS cybersecurity mission.
+
+Information collected by \ETA or otherwise obtained by CS\&C may be
+disseminated for non-cybersecurity purposes in limited situations when the collected
+information appears to indicate involvement in activities that may violate laws or
+otherwise when the sharing is done in the performance of a lawful government function.
+This may include dissemination for law enforcement/intelligence or administrative
+purposes unrelated to the protection of an information system from cybersecurity threats,
+mitigations against such threats, or response to a cyber incident. In such cases, the
+recipient will be a federal, state, or local law enforcement entity.''\cite[p.23]{dhs-e3a-pia}
+\end{quote}
+
+
+\section{Excerpt from Privacy Impact Assessment Update for EINSTEIN 3---Accelerated (May 2013)}
+\subsection{Reason for the PIA Update --- Web Content Filtering}\label{excerpt4}
+\begin{quote}
+``WCF will provide protection for web traffic5
+by blocking
+access to certain websites that are known to be, or include, malicious content (malware). In
+addition, WCF will prevent malware from suspicious websites from running on federal civilian
+Executive Branch D/A systems and networks. Finally, WCF will also detect and/or block phishing
+attempts as well as the undesirable content that may be included in
+those attempts.
+
+``WCF categorizes web-based suspicious traffic, to include all URL/URIs and the content of web sessions,6 which allows system operators to specifically allow or disallow certain types of content that is known to be, or includes, malicious content (malware). WCF service can be configured to alert or block on traffic based on the applicable high-confidence cyber threat indicators and commercial signature development technology (used by the ISP) to allow DHS to block and alert against web-based traffic. This will permit traffic suspected by DHS as malicious as well as customer-specific cybersecurity risk protection requirements to alert or block on specific types of traffic. WCF provides this service via a web proxy between the client and the web server it is attempting to access. The proxy will perform the actions such as redirect, prevent, and/or alert on attempted access to certain (i.e., malicious) web content that matches a DHS cyber threat indicator that may look for a specific URL/URI or webpage content.
+
+``WCF capabilities also include in-line Secure Socket Layer (SSL)
+decryption; malware detection; and advanced analytics. WCF SSL
+provides visibility into specific types of organizational traffic
+(including web content) that has been encrypted, for the purpose of
+protecting that traffic from malicious activity that would otherwise
+remain hidden by traversing encrypted channels. The capability
+decrypts web traffic of D/As participating in the \ETA WCF capability
+for the purpose of detecting and preventing malicious web content on
+the D/A network.  DHS is not interested in the behavior of
+individuals; decryption is focused on web communications, not
+communications between individuals. DHS does not use this capability
+to investigate the behavior or private content of individuals. Malware
+detection is an inherent part of operating WCF. WCF protects specific
+federal civilian Executive Branch D/A traffic by using
+Government-furnished cyber threat indicators to detect malicious
+activity. Advanced analytics in this context refers to behavior-based
+(heuristic) threat indicators to identify how a cyber threat or any of
+the anomalous characteristics of a cyber threat, a computer system, or
+the data behaves.''\cite[pp 2--3]{dhs-e3a-pia2}.
+\end{quote}
+
+
+
 
 \end{document}
 
