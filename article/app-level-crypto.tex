@@ -337,17 +337,69 @@ resulting data (Figure~\ref{encrypted}) was then sent to the web server.
 \end{figure}
 
 
-\subsection{Implementation}
-In our development, we created two distinct versions.
+\subsection{Prototype}
+In our development, we created two distinct prototypes.
 
 The first prototype version encrypted each field of the survey form
 using the plain RSA encryption using the PKCS1 v1.5
 algorithm. This version of RSA encryption uses the OAEP-based
 encryption scheme to protect against chosen plaintext and replay
-attacks, but it is not very efficient. Our second implementation used
-the generation of an AES-256 session key to encrypt the JSON data
-structure, as described earlier in this document.
+attacks, but it is not very efficient. 
 
+Our second prototype used the generation of an AES-256 session
+key to encrypt the JSON data structure, as described earlier in this
+document. In this prototype, the RSA public/private keypair is
+separately generated and the public key is explicitly embedded in the JavaScript; in a production
+system, the public/private keypair would be stored in appropriately
+protected files and dynamically served to the client. The keys are
+created with the WebCryptography API and they are only valid for the
+duration of the current page, per section 6.2 of the Web Crypto API standard.
+
+Both prototypes implement a client/server system that displays a
+simple survey, encrypts the survey results in the user's web browser,
+and sends the encrypted results to the web server, where the encrypted
+survey responses are stored in a database. A second interface, created
+for a demonstration, shows both the encrypted and decrypted values.
+
+The prototype is organized in two directories in the git repository:
+
+\begin{description}
+  \item[src/html/demo] Files for configuration and setup of the demo,
+    as well as the JavaScript implementation.
+  \item[src/cgi-bin/] Software that runs on the web server in response
+    to the JavaScript running.
+\end{description}
+
+\subsubsection{/src/html/demo}
+This section describes the contents of the /src/html/dmeo directory.
+
+\begin{description}
+  \item[config.ini] This configuration file specifies the location of
+    the database, the database credentials, and a JSON object that
+    specifies the public/private keypair. The key is specified with a
+    JSON data object that specifies the parameters $d, e, q, n$ and $p$.
+  \item[createdb.sql] The SQL schema for the server database.
+  \item[dbutil.py] A python program that can create the database and
+    list its contents.
+  \item[demo\_random.html] A brief HTML demonstration of generating
+    random numbers with JavaScript.
+  \item[encrypt.js] JavaScript routines for using the Web Cryptography
+    API, used for the first prototype.
+  \item[encrypt\_json.js] A revised JavaScript encryption system that
+    uses the \verb|window.crypto.subtle.generateKey()| function to
+    create an AES-256 key, the \verb|JSON.stringify| method to marshal
+    the form values, and the \verb|encrypt_buff| function to encrypt
+    the JSON string.
+  \item[jquery-3.1.1.min.js] The venerable JQuery JavaScript user
+    interface library.
+  \item[keyutil.py] A utility program or creating and manipulating
+    the RSA keys used in the prototype.
+  \item[keyutil\_test.py] Unit tests for the keyutil program.
+  \item[notes.txt] Developer notes.
+  \item[setup\_rel7.sh] A bash script that installs the necessary
+    packages on a Red Hat Enterprise License (RHEL) System 7 Linux
+    operating system to run the prototype.
+\end{description}
 
 
 
