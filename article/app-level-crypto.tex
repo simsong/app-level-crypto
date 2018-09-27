@@ -8,6 +8,7 @@
 \usepackage{fancyvrb}
 \usepackage{nameref}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \newcommand{\JournalTitle}[1]{#1}
 
 \title{Application Level Cryptography for Securing Online Survey Responses}
@@ -184,23 +185,48 @@ without modification.
 
 TLS is based on public key cryptography. Each web server is configured
 with a private key and a public key, which is contained in a public
-key certificate. Information encrypted with the private key can only
-be decrypted with the public key. When the web browser connects to the
-web server, the server sends the browser its public key
-certificate. The browser then creates a randomly generated session
-key, encrypts the key with the public key and sends it to the
-server. The server uses its private key to decrypt the session key so
-that the TLS-encrypted communications can take place.
+key certificate (Figure~\ref{tls}). Information encrypted with the public key can only
+be decrypted with the private key. The web server's public key and its
+hostname are stored in its server certificate (step 1). When the web browser connects to the
+web server (step 2), the server sends the browser its public key, which is
+contained in the server certificate (step 23. The browser and the
+server then create a session key that is used to encrypt the TLS
+channel (step 4). 
+
+\begin{figure}
+  \includegraphics{art/tls.pdf}
+  \caption{Transport Layer Security (TLS), in brief}\label{tls}
+  \end{figure}
+
+\begin{figure}
+  \includegraphics{art/emonitoring.pdf}
+  \caption{EINSTEIN 3A's TLS interception capabilities.}\label{emonitoring}
+  \end{figure}
 
 Many commercial network appliances now offer features such as ``Deep
 Packet Inspection of SSL/TLS Encrypted
 Traffic''\cite{sonicwall}, ``TLS Decryption,''\cite{paloalto} ``SSL
 analysis,''\cite{globalsign}. These devices typically operate as a
 cryptographic proxy, essentially mounting a man-in-the-middle attack
-on the encrypted communications. This is precisely the kind of attack
-on confidentiality that TLS was designed to prevent; TLS protections
-are bypassed by issuing additional certificates to the TLS inspection
-device. A 2016 study by O'Neill et. al found that 1 in 250 TLS
+on the encrypted communications. TLS can't prevent this sort of
+attack, but it allows the web browser to at least detect the attack,
+because the certificate provided by the interception system doesn't
+verify.
+
+The DHS EINSTEIN 3A system operates in this way
+(Figure~\ref{emonitoring}). When the US government web user types
+the URL of a remote web server (step 1), the browser opens a
+connection not to the remote webserver, but to EINSTEIN 3A. It is the
+EINSTEIN system that then makes the connection to the remote web
+server (step 2). The remote web server sends its certificate back to
+EINSTEIN (step 3), and the two systems create a cryptographically
+protected channel that is used for future communication.
+Finally, the EINSTEIN system sends its public key to the web user and
+creates a second protected channel between EINSTEIN and the user (step
+5). 
+
+TLS interception systems similar to EINSTEIN are now widely used on the Internet
+A 2016 study by O'Neill et. al found that 1 in 250 TLS
 connections on the Internet were proxied. ``The majority of these proxies appear to be benevolent,
 however we identify over 1,000 cases where three malware
 products are using this technology nefariously,'' the authors concluded.\cite{DBLP:conf/imc/ONeillRSZ16}
@@ -236,13 +262,20 @@ application as it is being sent to the browser.
 The Census Bureau has developed an approach that uses the Web
 Cryptography API to encrypt survey responses sent from the
 web browser to the web server separately from the underlying HTTPS
-technology used to encrypt the web page itself. This second layer of encryption
+technology used to encrypt the web page itself (Figure~\ref{app-level-diagram}. This second layer of encryption
 operates inside the HTTPS encrypted tunnel at the application data
-level. It received a second encryption public key and used this second
+level. The process beings with the web server at the statistical
+agency creating a second encryption public key (Step 1) and used this second
 key to encrypt respondent data, then sent the respondent data to the
 web server for decryption. As a result, even if a TLS decryption
 appliance was used to decrypt the HTTPS stream, it would not have
 access to survey responses.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{art/app-level-diagram}
+  \caption{Application-level cryptography uses a second public/private
+    key pair to encrypt survey responses..\label{app-level-diagram}}
+\end{figure}
 
 \subsection{DHS Reactions}
 
@@ -296,26 +329,30 @@ Our prototype system modifies these components in the following ways:
 
 \begin{enumerate}
 \item The web application server is modified to create a second
-  public/private key pair that is used to encrypt respondent data. We
+  public/private key pair that is used to encrypt respondent
+  data (Figure~\ref{app-level-diagram}, step 1).  We
   call this the application-level key pair. In our implementation, the
   server generates a 1024-bit RSA key pair that is used to secure all
   respondent data.
-\item Next, we modify the JavaScript application sent from web
+\item We modify the HTML and JavaScript application sent from web
   application server to the browser in three ways. First, the
-  application-level public key is embedded into the JavaScript
-  application. Second, new JavaScript is added that creates a 256-bit
+  application-level public key is embedded in the JavaScript
+  application. (step 2)
+\item The user fills out the HTML page as before (step 3).
+\item The new JavaScript is added that creates a 256-bit
   AES session encryption key to encrypt the respondent data when the user clicks the
-  ``SUBMIT'' button. This session encryption key is then encrypted
-  with the application-level public key. Finally, the encrypted
-  session key and the encrypted respondent data (the ``encrypted
+  ``SUBMIT'' button (step 4). This session encryption key is then encrypted
+  with the application-level public key (step 5).
+\item The encrypted session key and the encrypted respondent data (the ``encrypted
   package'') are sent to the
-  application server.
+  application server (step 6). 
 \item We further modify the application server to store the encrypted
   package in the database.
 \item Finally, we create a new program for extracting the encrypted
   data from the database and decrypting it. Decryption is performed
   using the application-level private key to decrypt the 256-bit AES
-  session key, which is then used to decrypt the respondent data.
+  session key, which is then used to decrypt the respondent data (step
+  7).
 \end{enumerate}
 
 
@@ -559,10 +596,31 @@ the anomalous characteristics of a cyber threat, a computer system, or
 the data behaves.''\cite[pp 2--3]{dhs-e3a-pia2}.
 \end{quote}
 
+\section{Conclusion and Next Steps}
 
+This report details a system developed by the US
+Census Bureau to provide a second layer of cryptographic protection
+for respondent data submitted over the web. Although the system was
+developed because of concerns over the Department of Homeland
+Security's EINSTEIN 3A system, the Bureau learned during the
+development of the system that EINSTEIN 3A was designed to monitor
+\emph{outging} web traffic of US Government employees, and not
+\emph{incoming} traffic to US Government websites.
+
+Nevertheless, research by academics has determined that a small
+percentage of Internet users have their web traffic monitored using
+TLS interception techniques similar to those envisioned in the
+EINSTEIN 3A program. An application-level encryption system would
+protect respondents against this kind of monitoring. Application-level
+encryption would also allow sensitive data to be collected by the
+Census Bureau on Internet-connected servers and then to be transferred 
+to internal servers at a later point in time for subsequent
+decryption. As such, the Census Bureau will continue to work on this
+technology, and hopes to produce a software toolkit that makes it easy
+for web developers to use this approach at some point in the future.
 
 
 \end{document}
 
-% LocalWords:  cyber cryptographic cybersecurity mitigations NCPS TLS
-%%  LocalWords:  FCSM decrypt decrypted cgi
+%% LocalWords:  cyber cryptographic cybersecurity mitigations NCPS TLS
+%%  LocalWords:  FCSM decrypt decrypted cgi cryptographically
