@@ -73,7 +73,7 @@ Bureau's TLS encryption keys.
 
 The Census Bureau and other U.S. statistical agencies collect
 data from respondents under a pledge of confidentiality which states
-that data collected will used for statistical purposes
+that data collected will be used for statistical purposes
 only. In particular, Title 13 of the U.S. Code prohibits information
 that the Census Bureau collects for being used for law enforcement
 purposes.
@@ -105,7 +105,7 @@ might pose a similar threat to confidentiality.
 \subsection{EINSTEIN}
 
 The EINSTEIN program, operated by the U.S. Department of Homeland
-Security's (DHS), is designed to provide real-time collection,
+Security (DHS), is designed to provide real-time collection,
 analysis, and sharing of computer security information across the
 federal civilian government to help mitigate this
 threat.\cite{dhs-einstein-2004}
@@ -138,7 +138,7 @@ result in the EINSTEIN sensors encountering personally identifiable
 information (PII), such information would be immediately deleted if it
 was captured (See \nameref{excerpt1}). The PIA also stressed that it
 might be necessary, at times, to include PII captured by EINSTEIN in
-an analytical product that DHS would then distributed. The PIA further
+an analytical product that DHS would then distribute. The PIA further
 stated that non-cybersecurity information collected by DHS might be
 disseminated for non-cybersecurity purposes (see \nameref{excerpt3}).
 
@@ -174,7 +174,7 @@ use of an encryption protocol called transport layer security
 (URL) that begins with ``http://'' --- for example,
 \url{http://census.gov} --- the connection between the server and the
 browser is not encrypted. Alternatively, when the same web page is
-accessed using a URL that beings with ``https://''
+accessed using a URL that begins with ``https://''
 (e.g. \url{https://census.gov}), then the server and the browser
 exchange information over an encrypted channel.  By design, TLS
 provides for confidentiality and integrity of the connection: it
@@ -215,7 +215,7 @@ monitored with technology that decrypted TLS-protected communications.
 The World Wide Web Consortium's Web Cryptography API\cite{wcapi}
 defines a set of cryptographic functions that can be used by
 applications running in modern web browsers. According to the
-standard, typical uses for this technology is to enable Multi-factor
+standard, typical uses for this technology are to enable Multi-factor
 Authentication, to encrypt documents locally that are then stored
 encrypted on a remote website, to sign documents, and to implement
 secure messaging. According to the Can I Use website, the Web
@@ -234,8 +234,9 @@ order to assure that an attacker does not modify the JavaScript
 application as it is being sent to the browser.
 
 The Census Bureau has developed an approach that uses the Web
-Cryptography API to separately encrypt survey responses sent from the
-web browser to the web server. This second layer of encryption
+Cryptography API to encrypt survey responses sent from the
+web browser to the web server separately from the underlying HTTPS
+technology used to encrypt the web page itself. This second layer of encryption
 operates inside the HTTPS encrypted tunnel at the application data
 level. It received a second encryption public key and used this second
 key to encrypt respondent data, then sent the respondent data to the
