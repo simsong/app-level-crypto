@@ -1,6 +1,8 @@
-\documentclass[fleqn,10pt]{wlscirep}
-%\documentclass{article}
-%\usepackage[margin=1in]{geometry}
+% DOC Seals: home.commerce.gov/oas/doc_seals.htm
+
+
+
+\documentclass[fleqn,12pt]{wlscirep}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{xspace}
@@ -9,7 +11,12 @@
 \usepackage{nameref}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{titling}
+\usepackage{bold-extra}
+\usepackage{hyphenat}
 \newcommand{\JournalTitle}[1]{#1}
+
 
 \title{Application Level Cryptography for Securing Online Survey Responses}
 \author{Simson L. Garfinkel and William Yates}
@@ -34,7 +41,7 @@ Census Bureau learned that the EINSTEIN~3A provisions for Web
 Content Filtering were designed to decrypt outbound TLS connections
 from U.S. Government facilities, and
 not inbound connections from the general public to U.S. Government web
-servers. However, the increased use of TLS decryption by other
+servers. However, given the increased use of TLS decryption by other
 organizations, the Census Bureau will continue to develop the
 application level cryptography technology.
 \end{abstract}
@@ -43,6 +50,20 @@ application level cryptography technology.
 \newcommand{\ETA}{$\textrm{E}^\textrm{3}\textrm{A}$\xspace}
 
 \begin{document}
+\begin{titlepage}
+\setlength{\unitlength}{1in}
+\vfill
+\begin{picture}(6.5,9)
+  \put(-0.5,1){\includegraphics[width=7.5in]{cover}}
+  \put(-0.5,-.75){\includegraphics[width=1.5in]{census_logo}}
+  \put(6.25,-.6){\textit{census.gov}}
+  \put(0,7.25){\color{white}{\Authfont{\scshape\fontsize{16}{16}{\selectfont
+          The Research And Methodology Directorate}}}}
+  \put(0,6.25){\color{white}{\Authfont{\fontsize{16}{18}{\selectfont\begin{minipage}{4in}\raggedright\nohyphens{\thetitle}\end{minipage}}}}}
+  \put(0,2){\color{white}{\Authfont{\fontsize{16}{16}{\selectfont\theauthor}}}}
+  \put(0,1.5){\color{white}{\Authfont{\fontsize{16}{16}{\selectfont December 2018}}}}
+\end{picture}
+\end{titlepage}
 
 %\flushbottom
 \maketitle
@@ -54,8 +75,8 @@ application level cryptography technology.
 \section{Introduction}
 
 The Census Bureau and other U.S. statistical agencies increasingly
-rely on Internet-based self-response instruments to collect
-data from individuals and establishments. Because Internet-connected
+rely on internet-based self-response instruments to collect
+data from individuals and establishments. Because internet-connected
 computers have long been under attack by both cyber criminals and
 foreign governments~\cite{dick-testimony}, these connections are now
 subject to monitoring by the U.S. Department of Homeland
@@ -83,14 +104,14 @@ that the Census Bureau collects from being used for law enforcement
 purposes.
 
 Statistical agencies are increasingly accepting data from respondents
-using Internet self-response instruments. The Census
-Bureau plans to make heavy use of Internet self-response for the 2020
+using internet self-response instruments. The Census
+Bureau plans to make heavy use of internet self-response for the 2020
 census.~\cite{pennington2016} 
 At the same time, computers operated by the U.S. Government are under
 constant attack. A successful attack on Census Bureau computers would
 also represent a significant threat to data confidentiality. For this
-reason, the Census Bureau, like other civilian U.S. Government 
-agencies, participates in the EINSTEIN network monitoring program
+reason, the Census Bureau, like other  U.S. Government 
+civilian agencies, participates in the EINSTEIN network monitoring program
 operated by the U.S. Department of Homeland Security.~\cite{thompson-feb2017}
 
 At the 13th Biennial Federal Committee on Statistical Methodology
@@ -99,8 +120,8 @@ Overlapping Mandates between Federal Statistical Agencies and
 Departmental Chief Information Officers.''~\cite{fcsm-program} One of
 the panel speakers was Wayne R. Smith, the former Chief Statistician
 of Canada and Head of Statistics Canada, who resigned his position in
-September 2016 over concerns that the move to shared information services
-meant that Statistics Canada would be unable to
+September 2016 over concerns that Statistics Canada's  move to shared information services
+meant that the agency would be unable to
 protect the confidentiality of respondent
 data~\cite{ottawacitizen}. After Dr. Smith spoke, several attendees
 expressed concern that the U.S. Government's ``EINSTEIN'' program
@@ -111,20 +132,20 @@ might pose a similar threat to confidentiality for U.S. statistical agencies.
 The EINSTEIN program, operated by the U.S. Department of Homeland
 Security (DHS), is designed to provide real-time collection,
 analysis, and sharing of computer security information across the
-federal civilian government to help mitigate threats.~\cite{dhs-einstein-2004}
+federal government civilian agencies to help mitigate internet-based threats.~\cite{dhs-einstein-2004}
 
 The original EINSTEIN program was developed as part of the U.S.
-Governments' Trusted Internet Connection program, an outgrowth of the
+Governments' Trusted Internet Connection (TIC) program, an outgrowth of the
 2003 National Strategy to Secure Cyberspace.~\cite{nstsc-2003}
 The original EINSTEIN system was designed to
-monitor and record network flow records between federal civilian executive branch
+monitor and record network flow records between federal civilian  executive branch
 agencies and the public internet to provide after-action forensic analysis and support. The
 EINSTEIN~2 program, first deployed in 2008, incorporated an intrusion
 detection system to detect hostile activity against federal agencies
 in real time and provide notification to the victims. Four years later, DHS began
 transitioning to the EINSTEIN~3 Accelerated (\ETA) program, with the
 goal of both detecting and preventing cyber attacks against federal
-civilian government networks.~\cite{dhs-einstein}
+civilian government  networks.~\cite{dhs-einstein}
 
 Designed to be operated by the DHS Office of Cybersecurity and
 Communications (CS\&C), EINSTEIN~3's feature set included deep packet
@@ -177,15 +198,16 @@ been adopted. It reads:
 \subsection{Web Content Filtering of Encrypted Content}
 
 Generally speaking, there are two ways that modern web browsers can
-communicate with web servers over the Internet: by sending Hypertext
-Transfer Protocol (HTTP) commands over the Internet without
-encryption, and by wrapping HTTP commands within a TLS connection.
+communicate with web servers over the internet: by sending Hypertext
+Transfer Protocol (HTTP) commands over the internet without
+encryption, and by wrapping HTTP commands within a TLS connection,
+sometimes called a TLS tunnel..
 
 When a web page is accessed using a Uniform Resource Locator
-(URL) that begins with ``http://'' --- for example,
+(URL) that begins with \emph{http://} --- for example,
 \url{http://census.gov} --- the connection between the server and the
 browser is not encrypted. Alternatively, when the same web page is
-accessed using a URL that begins with ``https://''
+accessed using a URL that begins with \emph{https://}
 (e.g. \url{https://census.gov}), then the server and the browser
 exchange information over an encrypted connection.
 
@@ -219,7 +241,7 @@ encrypt the TLS connection (step 4).
 \begin{figure}
   \includegraphics[width=\textwidth]{art/emonitoring2.pdf}
   \caption{EINSTEIN~3A's TLS interception could also be used to monitor the
-    Census Bureau's Internet self response instrument.}\label{emonitoring2}
+    Census Bureau's internet self response instrument.}\label{emonitoring2}
   \end{figure}
 
 Many commercial network appliances now offer a feature variously
@@ -248,9 +270,9 @@ by making the appliance a certificate authority and embedding the
 appliance's certificate in the trusted certificate database of the web 
 user's computer.
 
-TLS interception systems similar to EINSTEIN are now widely used on the Internet.
+TLS interception systems similar to EINSTEIN are now widely used on the internet.
 A 2016 study by O'Neill et al. found that 1 in 250 TLS
-connections on the Internet were proxied. ``The majority of these proxies appear to be benevolent,
+connections on the internet were intercepted in this \emph{proxied} manner. ``The majority of these proxies appear to be benevolent,
 however we identify over 1,000 cases where three malware
 products are using this technology nefariously,'' the authors
 concluded~\cite{DBLP:conf/imc/ONeillRSZ16}. There is also evidence
@@ -258,7 +280,7 @@ that foreign governments may have used this approach to spy on their
 own citizens~\cite{fox-it-black-tulip}.
 
 There are many reasons that an organization might legitimately wish to
-monitor TLS connections in this manner. For example, the organization
+monitor the content of TLS connections. For example, the organization
 could detect if a remote website was exploiting web browser
 vulnerabilities to inject malware. TLS interception can also help
 identify the command-and-control channels used by malware operating
@@ -268,7 +290,7 @@ used to detect inappropriate network activity by employees.
 
 TLS interception systems can also be turned around, and used to
 monitor inbound TLS connections to an organization's web server
-originating on the public Internet
+originating on the public internet
 (Figure~\ref{emonitoring2}). In this configuration, the monitoring
 system is given a copy web server's certificate and private key, so
 that remote web users are not aware that they are connecting to the
@@ -286,7 +308,7 @@ monitored with technology that decrypted TLS-protected communications.
 
 The World Wide Web Consortium's Web Cryptography API~\cite{wcapi}
 defines a set of cryptographic functions that can be used by
-JavaScript applications running in modern web browsers. According to the
+JavaScript applications running within in modern web browsers. According to the
 standard, typical uses for this technology are to enable Multi-factor
 Authentication, to encrypt documents locally that are then stored
 encrypted on a remote website, to sign documents, and to implement
@@ -300,7 +322,7 @@ for Internet Explorer 11 (Figure~\ref{caniuse}).
     according to \url{https://caniuse.com/\#feat=cryptography}.\label{caniuse}}
 \end{figure}
 
-The Web Cryptography standard requires that web application using Web
+The Web Cryptography standard requires that web applications using Web
 Cryptography API be loaded into a web browser using the TLS protocol, in
 order to assure that an attacker does not modify the JavaScript
 application as it is being sent to the browser.
@@ -358,7 +380,7 @@ This section describes the application level cryptography mechanism.
 
 \subsection{Overview}
 
-A typical Internet self-response survey consists of three parts:
+A typical internet self-response survey consists of three parts:
 
 \begin{enumerate}
   \item A web application server, which sends the survey form to
@@ -382,14 +404,14 @@ algorithm. This version of RSA encryption uses the OAEP-based
 encryption scheme to protect against chosen plaintext and replay
 attacks. The prototype is conceptually easy to understand, but it is not very efficient. 
 
-Our second prototype used the generation of an AES-256 session
-key to encrypt the JSON data structure, as described earlier in this
-document. In this prototype, the RSA public/private keypair is
-separately generated and the public key is explicitly embedded in the JavaScript; in a production
-system, the public/private keypair would be stored in appropriately
-protected files and dynamically served to the client. The keys are
-created with the WebCryptography API and they are only valid for the
-duration of the current page, per section 6.2 of the Web Crypto API standard.
+Our second prototype generated an AES-256 session key and used this
+key to encrypt the contents of a JSON data structure that contained
+the survey responses. The RSA public key received from the web server
+was then used to encrypted the AES-256 session key. The encrypted
+session key and the encrypted JSON data structure are then sent
+together to the web server as a single package. This version is more
+efficient the data size of the encrypted JSON data structure and a
+single RSA encryption is considerably smaller than multiple RSA encryptions.
 
 Both prototypes implement a client/server system that displays a
 simple survey, encrypts the survey results in the user's web browser,
@@ -397,7 +419,7 @@ and sends the encrypted results to the web server, where the encrypted
 survey responses are stored in a database. A second interface, created
 for a demonstration, shows both the encrypted and decrypted values.
 
-Our prototype system modified the typical Internet survey system in the following ways:
+Our prototype system modified the typical internet survey system in the following ways:
 
 \begin{enumerate}
 \item The web application server was modified to create a second
@@ -421,7 +443,7 @@ Our prototype system modified the typical Internet survey system in the followin
    The encrypted session key and the encrypted respondent data (the ``encrypted
   package'') are sent to the  application server (step 6). 
 \item We further modified the application server to store the encrypted
-  package in the database.
+  response in the database.
 \item Finally, we created a new program for extracting the encrypted
   data from the database and decrypting it. Decryption is performed
   using the application-level private key to decrypt the 256-bit AES
@@ -566,16 +588,15 @@ development of the system that EINSTEIN~3A was designed to monitor
 \emph{incoming} traffic to U.S. Government websites.
 
 Nevertheless, research by academics has determined that a small
-percentage of Internet users have their web traffic monitored using
+percentage of internet users have their web traffic monitored using
 TLS interception techniques similar to those envisioned in the
 EINSTEIN~3A program. An application-level encryption system would
 protect respondents against this kind of monitoring. Application-level
 encryption would also allow sensitive data to be collected by the
-Census Bureau on Internet-connected servers and then to be transferred 
+Census Bureau on internet-connected servers and then to be transferred 
 to internal servers at a later point in time for subsequent
-decryption. As such, the Census Bureau will continue to work on this
-technology, and hopes to produce a software toolkit that makes it easy
-for web developers to use this approach at some point in the future.
+decryption. As such, the Census Bureau will continue to develop this
+technology.
 
 
 \section{Disclaimer}
