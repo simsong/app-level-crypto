@@ -308,7 +308,7 @@ monitored with technology that decrypted TLS-protected communications.
 
 The World Wide Web Consortium's Web Cryptography API~\cite{wcapi}
 defines a set of cryptographic functions that can be used by
-JavaScript applications running within in modern web browsers. According to the
+JavaScript applications running within modern web browsers. According to the
 standard, typical uses for this technology are to enable Multi-factor
 Authentication, to encrypt documents locally that are then stored
 encrypted on a remote website, to sign documents, and to implement
@@ -332,7 +332,7 @@ Cryptography API to encrypt survey responses sent from the
 web browser to the web server separately from the underlying HTTPS
 technology used to encrypt the web page itself (Figure~\ref{app-level-diagram}). This second layer of encryption
 operates inside the HTTPS encrypted tunnel at the application data
-level. The process beings with the web server at the statistical
+level. The process begins with the web server at the statistical
 agency creating a second encryption public key (Step 1) and used this second
 key to encrypt respondent data, then sent the respondent data to the
 web server for decryption. As a result, even if a TLS decryption
@@ -358,7 +358,7 @@ deploying the application-level cryptography system would not violate
 any DHS policy, and that the system
 would provide additional security for Census Bureau-collected data, by
 allowing the data to reside in encrypted form on the Bureau's web
-server before it transited to a more secure system.
+server before it transitioned to a more secure system.
 
 At the meeting, DHS also stated that in its current deployment, the \ETA Web Content Filtering
 was not designed to filter data sent from external web browsers to
@@ -405,13 +405,14 @@ encryption scheme to protect against chosen plaintext and replay
 attacks. The prototype is conceptually easy to understand, but it is not very efficient. 
 
 Our second prototype generated an AES-256 session key and used this
-key to encrypt the contents of a JSON data structure that contained
+key to encrypt the contents of a JavaScript Object Notation (JSON) data structure that contained
 the survey responses. The RSA public key received from the web server
-was then used to encrypted the AES-256 session key. The encrypted
+was then used to encrypt the AES-256 session key. The encrypted
 session key and the encrypted JSON data structure are then sent
 together to the web server as a single package. This version is more
-efficient the data size of the encrypted JSON data structure and a
-single RSA encryption is considerably smaller than multiple RSA encryptions.
+efficient, as the length of the combined encrypted JSON data structure and a
+single RSA encryption is considerably smaller the size of encrypting
+each value with RSA.
 
 Both prototypes implement a client/server system that displays a
 simple survey, encrypts the survey results in the user's web browser,
@@ -456,7 +457,7 @@ Our prototype system modified the typical internet survey system in the followin
 
 We create a simple web form for a hypothetical survey that requested a
 first name and an age (Figure~\ref{survey}). When submitted, these two
-values were packed into a JavaScript Object Notation (JSON) data
+values were packed into a JSON data
 structure (Figure~\ref{json}), compressed, and encrypted with the session key. The
 resulting data (Figure~\ref{encrypted}) was then sent to the web
 server. We also created a user interface that demonstrated how the
@@ -520,7 +521,7 @@ the git repository.
   \item[encrypt.js] JavaScript routines for using the Web Cryptography
     API, used for the first prototype.
   \item[encrypt\_json.js] A revised JavaScript encryption system that
-    uses the \verb|window.crypto.subtle.generateKey()| function to
+    uses the \texttt{window.crypto.subtle.generateKey()} function to
     create an AES-256 key, the \verb|JSON.stringify| method to marshal
     the form values, and the \verb|encrypt_buff| function to encrypt
     the JSON string.
