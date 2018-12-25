@@ -1,1 +1,0 @@
-../../cgi-bin/survey_json_report.cgi
