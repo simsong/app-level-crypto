@@ -1,1 +1,0 @@
-../../cgi-bin/submit_json.cgi
